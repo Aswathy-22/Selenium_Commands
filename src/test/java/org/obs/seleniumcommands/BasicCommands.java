@@ -1,5 +1,6 @@
 package org.obs.seleniumcommands;
 import org.obs.utility.RandomDataGeneration;
+import org.obs.utility.TableUtility;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.Select;
@@ -239,7 +240,6 @@ public class BasicCommands extends Base {
             }
         }
     }
-
     @Test
     public void verifyDiffBtwFindelemetandFindelements() {
         driver.get("https://demo.guru99.com/test/newtours/");
@@ -405,7 +405,6 @@ public class BasicCommands extends Base {
             throw new RuntimeException("GIVEN COUNTRY DOESNOT EXISTS INSIDE DROPDOWN...!");
         }
     }
-
     @Test
     public void validateDeselectAll() {
         driver.get("https://chercher.tech/practice/practice-dropdowns-selenium-webdriver");
@@ -587,5 +586,118 @@ public class BasicCommands extends Base {
         action.dragAndDrop(draggable2,dragZone).build().perform();
         action.dragAndDrop(draggable3,dragZone).build().perform();
         action.dragAndDrop(draggable4,dragZone).build().perform();
+    }
+    @Test
+    public void verifyjavaScriptExecutor() {
+        driver.get("https://demowebshop.tricentis.com/login");
+        JavascriptExecutor js=(JavascriptExecutor) driver; //object creation for converting driver
+        js.executeScript("document.getElementById('Email').value='aswathyarabind@gmail.com'");
+        js.executeScript("document.getElementById('Password').value='marryGold257%'");
+        WebElement loginButton= driver.findElement(By.xpath("//input[@class='button-1 login-button']"));
+        js.executeScript("arguments[0].click();",loginButton);
+    }
+    @Test
+    public void verifySubscription(){
+        driver.get("https://demowebshop.tricentis.com/");
+        JavascriptExecutor js=(JavascriptExecutor) driver;
+        js.executeScript("document.getElementById('newsletter-email').value='asw@gmail.com'");
+        js.executeScript("document.getElementById('newsletter-subscribe-button').click()");
+        String titleName=js.executeScript("return document.title").toString();
+        System.out.println(titleName);
+    }
+    @Test
+    public void verifyVerticalScrolldown() {
+        driver.get("https://demowebshop.tricentis.com/");
+        JavascriptExecutor js=(JavascriptExecutor) driver;
+        js.executeScript("window.scrollBy(0,500);");//vertical scroll by 500pixel
+    }
+    @Test
+    public void verifyHorizontalScrolldown() {
+        driver.get("https://demo.guru99.com/test/guru99home/scrolling.html");
+        WebElement VBScript= driver.findElement(By.xpath("//a[text()='VBScript']"));
+        JavascriptExecutor js=(JavascriptExecutor) driver;
+        js.executeScript("arguments[0].scrollIntoView();",VBScript);
+    }
+    @Test
+    public void verifyScrollintoTotalHeight() {
+        driver.get("https://demo.guru99.com/test/guru99home/");
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("window.scrollTo(0,document.body.scrollHeight)");
+    }
+    @Test
+    public void verifyScrolldown() {
+        driver.get("https://demo.guru99.com/test/guru99home/");
+        WebElement linux= driver.findElement(By.xpath("//a[text()='Linux']"));
+        JavascriptExecutor js=(JavascriptExecutor) driver;
+        js.executeScript("window.scrollBy(0,700);",linux);
+        //js.executeScript("arguments[0].scrollIntoView();",linux);
+    }
+    @Test
+    public  void verifyCompanyDetails(){
+        driver.get("https://www.w3schools.com/html/html_tables.asp");
+        List<WebElement>rowElements=driver.findElements(By.xpath("//table[@id='customers']//tbody//tr"));
+        for(int i=2;i< rowElements.size();i++){
+            WebElement company= driver.findElement(By.xpath("//table[@id='customers']//tbody//tr["+i+"]//td[1]")); //first row elements is in company, tr value is not constant
+            String companyValue= company.getText();
+            if(companyValue.equals("Island Trading")){
+                WebElement contact= driver.findElement(By.xpath("//table[@id='customers']//tbody//tr["+i+"]//td[2]"));
+                System.out.println(contact.getText());
+                WebElement country= driver.findElement(By.xpath("//table[@id='customers']//tbody//tr["+i+"]//td[3]"));
+                System.out.println(country.getText());
+                break;
+            }
+        }
+    }
+    @Test
+    public void verifyTableValues() {
+        driver.get("https://www.w3schools.com/html/html_tables.asp");
+        List<WebElement> rowElements = driver.findElements(By.xpath("//table[@id='customers']//tbody//tr"));
+        List<WebElement> columnElements = driver.findElements(By.xpath("//table[@id='customers']//tbody//tr//td"));
+        List<ArrayList<String>> actualTableValues = TableUtility.get_Dynamic_TwoDimension_TablElemnts(rowElements, columnElements);
+        System.out.println(actualTableValues);
+        int rowSize= actualTableValues.size();
+        int columnSize= actualTableValues.get(0).size();
+        System.out.println(rowSize);
+        System.out.println(columnSize);
+        for(int i=0;i<rowSize;i++){
+            String country=actualTableValues.get(i).get(0);
+            if(country.equals("Island Trading")){
+                System.out.println(actualTableValues.get(i).get(1));
+                System.out.println(actualTableValues.get(i).get(2));
+                break;
+            }
+        }
+    }
+    @Test
+    public void verifyUserManagementEdit() throws InterruptedException {
+        driver.get("https://opensource-demo.orangehrmlive.com/web/index.php/auth/login");
+        WebElement useName = driver.findElement(By.xpath("//input[@class='oxd-input oxd-input--active'and @name='username']"));
+        useName.sendKeys("Admin");
+        WebElement passWord = driver.findElement(By.xpath("//input[@class='oxd-input oxd-input--active'and @name='password']"));
+        passWord.sendKeys("admin123");
+        WebElement loginButton = driver.findElement(By.xpath("//button[@class='oxd-button oxd-button--medium oxd-button--main orangehrm-login-button']]"));
+        loginButton.click();
+        Thread.sleep(10000);
+        Alert alert = driver.switchTo().alert();
+        alert.accept();
+        List<WebElement> menuselect = driver.findElements(By.xpath("//span[contains(@class,'oxd-text oxd-text--span oxd-main-menu-item--name')]"));
+        menuPanel("Admin", menuselect);
+        List<WebElement> columnElements= driver.findElements(By.xpath("//div[@class='oxd-table']//div[@class='oxd-table-body']//div[@class='oxd-table-card']//div[@class='oxd-table-cell oxd-padding-cell']/div"));
+        List<WebElement> rowElements= driver.findElements(By.xpath("//div[@class='oxd-table']//div[@class='oxd-table-body']//div[@class='oxd-table-card']"));
+        List<ArrayList<String>> actualTableValues = TableUtility.get_Dynamic_TwoDimension_TablElemnts(rowElements, columnElements);
+        System.out.println(actualTableValues);
+        int rowSize= actualTableValues.size();
+        System.out.println(rowSize);
+        int columnSize= actualTableValues.get(0).size();
+        System.out.println(columnSize);
+        for(int i=0;i<rowSize;i++){
+            String userName=actualTableValues.get(i).get(0);
+            if(userName.equals("Peter.Anderson")){
+                System.out.println(actualTableValues.get(i).get(1));
+                System.out.println(actualTableValues.get(i).get(2));
+                System.out.println(actualTableValues.get(i).get(3));
+                break;
+            }
+        }
     }
 }
