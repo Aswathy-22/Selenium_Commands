@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Regression Suit">
+    <test name="Non-Functional Test">
+        <classes>
+            <class name="org.obs.testngbasics.com.HomePageTest">
+                <methods>
+                    <include name="verifyHomePageTitle"/>
+                    <exclude name="verifySubscribeMessage"/>
+                </methods>
+            </class>
+            <class name="org.obs.testngbasics.com.LoginPageTest">
+                <methods>
+                    <include name="verifyUserLogin"/>
+                    <exclude name="loginPageTitle"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+    <test name="Functional Test">
+        <classes>
+            <class name="org.obs.testngbasics.com.RegisterPageTest">
+                <methods>
+                    <include name="verifyRegisterPage"/>
+                    <exclude name="registerPageTitle"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+</suite>
