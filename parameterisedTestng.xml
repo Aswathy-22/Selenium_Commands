@@ -3,9 +3,13 @@
 <suite name="Regression Suit">
     <test name="Functional Test">
         <parameter name="browser" value="Chrome"/>
-        <parameter name="baseurl" value="https://demowebshop.tricentis.com/"/>
+        <parameter name="baseurl" value="https://opensource-demo.orangehrmlive.com/web/index.php/auth/login"/>
         <classes>
-            <class name="org.obs.testngbasics.com.LoginPageTest"/>
+            <class name="org.obs.testngbasics.com.LoginPageTest">
+                <methods>
+                        <include name="verifyOrangeHRMInvalidUserLogin"/>
+                </methods>
+        </class>
         </classes>
     </test>
 </suite>
