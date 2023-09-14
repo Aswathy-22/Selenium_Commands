@@ -1,0 +1,78 @@
+package org.obs.utility;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.obs.constants.Constants;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+public class Excelutility {
+    public static XSSFWorkbook wb;
+    public static XSSFSheet sh;
+    public static FileInputStream f;
+    public List<String> readDataFromExcel(String sheetName) {
+        List<String> excelRows = new ArrayList<>();
+        try (FileInputStream f = new FileInputStream(System.getProperty("user.dir") + Constants.EXCEL_PATH);
+             Workbook wb = new XSSFWorkbook(f)) {
+            Sheet sh = wb.getSheet(sheetName);
+            DataFormatter formatter = new DataFormatter();
+            for (Row r : sh) {
+                for (Cell c : r) {
+                    excelRows.add(formatter.formatCellValue(c));
+                }
+            }
+        } catch (IOException e) {
+            throw new IllegalArgumentException("DEFINED FILE NOT FOUND");
+        }
+        return excelRows;
+    }
+    public List<List<String>> excelDataReader(String sheetName) {
+        DataFormatter formatter = new DataFormatter();
+        try {
+            f = new FileInputStream(System.getProperty("user.dir") + Constants.EXCEL_PATH);
+            wb = new XSSFWorkbook(f);
+        } catch (IOException e) {
+            throw new IllegalArgumentException("defined file not found");
+        }
+        sh = wb.getSheet(sheetName);
+        List<List<String>> excelRows = new ArrayList<>();
+        int rowCount = sh.getLastRowNum() - sh.getFirstRowNum();
+        for (int i = 0; i < rowCount + 1; i++) {
+            int x = 0;
+            Row row = sh.getRow(i);
+            String[] columnList = new String[row.getLastCellNum()];
+            for (int j = 0; j < columnList.length; j++) {
+                columnList[j] = formatter.formatCellValue(row.getCell(x));
+                x++;
+            }
+            excelRows.add(new ArrayList<>(Arrays.asList(columnList)));
+        }
+        return excelRows;
+    }
+    public Object[][] dataProviderRead(String sheetName) {
+        DataFormatter formatter = new DataFormatter();//filename
+        try {
+            f = new FileInputStream(System.getProperty("user.dir") + Constants.DATAPROVIDEREXCEL_PATH);
+            wb = new XSSFWorkbook(f);
+            sh = wb.getSheet(sheetName);
+            int rows = sh.getLastRowNum() + 1;//no.f rows
+            int cols = sh.getRow(0).getLastCellNum();//no of col
+            Object[][] data = new Object[rows][cols];//3*2
+            for (int i = 0; i < rows; i++) {
+                Row row = sh.getRow(i);
+                String[] columnList = new String[row.getLastCellNum()];//cell no.of first row and col created
+                for (int j = 0; j < cols; j++) {
+                    Cell cell = row.getCell(j);
+                    data[i][j] = cell.getStringCellValue();
+                }
+            }
+            return data;
+        } catch (IOException e) {
+            throw new IllegalArgumentException("defined file not found");
+        }
+    }
+}
+

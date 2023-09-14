@@ -7,12 +7,13 @@ import org.testng.annotations.Test;
 import java.util.List;
 public class CheckboxDemoMenu extends Baseform {
     @Test
-    public void checkboxDemoMenu() {
+    public void verifyCheckboxDemoMenu() {
         driver.get("https://selenium.obsqurazone.com/check-box-demo.php");
         WebElement singleCheckBoxDemo = driver.findElement(By.xpath("//input[@id='gridCheck']"));
         singleCheckBoxDemo.click();
         boolean checkBoxClick = singleCheckBoxDemo.isSelected();
         Assert.assertTrue(checkBoxClick, "Check box not selected");
+
         List<WebElement> checkBoxList = driver.findElements(By.xpath("//label[@class='form-check-label' and contains(@for,'check-box')]"));
         multipleCheckBoxDemo("Check Box One", checkBoxList);
         multipleCheckBoxDemo("Check Box One", "Check Box Two", checkBoxList);

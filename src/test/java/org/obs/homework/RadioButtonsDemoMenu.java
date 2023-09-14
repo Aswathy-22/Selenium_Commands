@@ -6,7 +6,7 @@ import org.testng.annotations.Test;
 import java.util.List;
 public class RadioButtonsDemoMenu extends Baseform{
     @Test
-    public void radioButtonMenu() {
+    public void verifyRadioButtonMenu() {
         driver.get("https://selenium.obsqurazone.com/radio-button-demo.php");
         List<WebElement> genderList = driver.findElements(By.xpath("//input[@name='inlineRadioOptions']//following-sibling::label"));
         genderSelect("Female", genderList);
@@ -14,10 +14,11 @@ public class RadioButtonsDemoMenu extends Baseform{
         showSelectedValueButton.click();
         boolean isDisplayed= showSelectedValueButton.isDisplayed();
         Assert.assertTrue(isDisplayed,"Button not displayed");
+
         List<WebElement> patientGenderList = driver.findElements(By.xpath("//input[@name='student-gender']//following-sibling::label"));
         patientGenderSelect("Female", patientGenderList);
         List<WebElement> patientAgeGroupList = driver.findElements(By.xpath("//input[@name='student-age']/following-sibling::label"));
-        patientAgeGroup("19 t0 44", patientAgeGroupList);
+        patientAgeGroup("45 to 60", patientAgeGroupList);
         WebElement getResultsButton = driver.findElement(By.id("button-two"));
         getResultsButton.click();
     }

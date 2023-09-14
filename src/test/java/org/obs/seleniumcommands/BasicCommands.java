@@ -2,12 +2,20 @@ package org.obs.seleniumcommands;
 import org.obs.utility.RandomDataGeneration;
 import org.obs.utility.TableUtility;
 import org.openqa.selenium.*;
+import org.openqa.selenium.Dimension;
+import org.openqa.selenium.Point;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -270,7 +278,6 @@ public class BasicCommands extends Base {
         System.out.println(alertText);
         alert.accept();
     }
-
     @Test
     public void verifyConfirmationAlertCancelButton() throws InterruptedException {
         driver.get("https://selenium.obsqurazone.com/javascript-alert.php");
@@ -699,5 +706,98 @@ public class BasicCommands extends Base {
                 break;
             }
         }
+    }
+    @Test
+    public void verifyImplicitWait(){
+        driver.get("https://demowebshop.tricentis.com/login");
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10)); //syntax
+        WebElement emailField = driver.findElement(By.id("Email"));
+        emailField.sendKeys("aswathyarabind@gmail.com");
+        WebElement passwordField = driver.findElement(By.name("Password"));
+        passwordField.sendKeys("marryGold257%");
+        WebElement loginButton = driver.findElement(By.xpath("//input[@value='Log in']"));
+        loginButton.click();
+    }
+    @Test
+    public void verifyExplicitWait(){
+        driver.get("https://demowebshop.tricentis.com/login");
+        WebElement emailField = driver.findElement(By.id("Email"));
+        emailField.sendKeys("aswathyarabind@gmail.com");
+        WebElement passwordField = driver.findElement(By.name("Password"));
+        passwordField.sendKeys("marryGold257%");
+        WebElement loginButton = driver.findElement(By.xpath("//input[@value='Log in']"));
+        loginButton.click();
+        WebDriverWait wait=new WebDriverWait(driver,Duration.ofSeconds(20));//syntax
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class='header-links']//a[@class='account']")));
+        WebElement userAccountEmail = driver.findElement(By.xpath("//div[@class='header-links']//a[@class='account']"));
+        String actualEmail = userAccountEmail.getText();
+        Assert.assertEquals(actualEmail, "aswathyarabind@gmail.com", "User Login failed");
+    }
+    @Test
+        public void ExplicitwaitForAlertTobePresent(){
+        driver.get("https://demoqa.com/alerts");
+        WebElement clickMeButton=driver.findElement(By.xpath("//button[@id='timerAlertButton']"));
+        clickMeButton.click();
+        WebDriverWait wait=new WebDriverWait(driver,Duration.ofSeconds(20));
+        wait.until(ExpectedConditions.alertIsPresent());
+        Alert alert=driver.switchTo().alert();
+        alert.accept();
+    }
+    @Test
+    public void verifyFluentWait(){
+        driver.get("https://demowebshop.tricentis.com/login");
+        WebElement emailField = driver.findElement(By.id("Email"));
+        emailField.sendKeys("aswathyarabind@gmail.com");
+        WebElement passwordField = driver.findElement(By.name("Password"));
+        passwordField.sendKeys("marryGold257%");
+        WebElement loginButton = driver.findElement(By.xpath("//input[@value='Log in']"));
+        loginButton.click();
+        FluentWait wait=new FluentWait(driver);
+        wait.withTimeout(Duration.ofSeconds(20));//total time required
+        wait.pollingEvery(Duration.ofSeconds(2));
+        wait.ignoring(NoSuchElementException.class);//which exception has to be mentioned
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class='header-links']//a[@class='account']")));
+        WebElement userAccountEmail = driver.findElement(By.xpath("//div[@class='header-links']//a[@class='account']"));
+        String actualEmail = userAccountEmail.getText();
+        Assert.assertEquals(actualEmail, "aswathyarabind@gmail.com", "User Login failed");
+    }
+    @Test
+    public void fluentwaitForAlertTobePresent(){
+        driver.get("https://demoqa.com/alerts");
+        WebElement clickMeButton=driver.findElement(By.xpath("//button[@id='timerAlertButton']"));
+        clickMeButton.click();
+        FluentWait wait=new FluentWait(driver);
+        wait.withTimeout(Duration.ofSeconds(10));//total time required
+        wait.pollingEvery(Duration.ofSeconds(2));
+        wait.ignoring(NoAlertPresentException.class);//exception for alert
+        wait.until(ExpectedConditions.alertIsPresent());
+        Alert alert=driver.switchTo().alert();
+        alert.accept();
+    }
+    @Test
+    public void verifyKeyboardActions() throws AWTException {
+        driver.get("https://demoqa.com/text-box");
+        WebElement fullName= driver.findElement(By.xpath("//input[@id='userName']"));
+        fullName.sendKeys("aswathy");
+        WebElement email= driver.findElement(By.xpath("//input[@id='userEmail']"));
+        email.sendKeys("asw@gmail.com");
+        WebElement currentAddress= driver.findElement(By.xpath("//textarea[@id='currentAddress']"));
+        currentAddress.sendKeys("abc,Thiruvananthapuram");
+        Robot robot=new Robot();
+        robot.keyPress(KeyEvent.VK_CONTROL);
+        robot.keyPress(KeyEvent.VK_A);
+        robot.keyRelease(KeyEvent.VK_CONTROL);
+        robot.keyRelease(KeyEvent.VK_A);
+        robot.keyPress(KeyEvent.VK_CONTROL);
+        robot.keyPress(KeyEvent.VK_C);
+        robot.keyRelease(KeyEvent.VK_CONTROL);
+        robot.keyRelease(KeyEvent.VK_C);
+        robot.keyPress(KeyEvent.VK_TAB);
+        robot.keyPress(KeyEvent.VK_CONTROL);
+        robot.keyPress(KeyEvent.VK_V);
+        robot.keyRelease(KeyEvent.VK_CONTROL);
+        robot.keyRelease(KeyEvent.VK_V);
+        WebElement permanentAddress= driver.findElement(By.xpath("//textarea[@id='permanentAddress']"));
+
     }
 }

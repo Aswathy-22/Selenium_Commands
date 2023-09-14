@@ -34,8 +34,8 @@ public class SelectInputMenu extends Baseform {
         //select.selectByVisibleText("Yellow");
         select.selectByVisibleText("Green");
         List<WebElement> dropDown = select.getAllSelectedOptions();
-        WebElement getFirstSelectedButton=driver.findElement(By.xpath("//button[@id='button-first']"));
-        getFirstSelectedButton.click();
+//        WebElement getFirstSelectedButton=driver.findElement(By.xpath("//button[@id='button-first']"));
+//        getFirstSelectedButton.click();
         WebElement getAllSelectedButton= driver.findElement(By.xpath("//button[@id='button-all']"));
         getAllSelectedButton.click();
         for (int i = 0; i < dropDown.size(); i++) {

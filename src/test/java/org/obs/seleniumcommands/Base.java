@@ -1,4 +1,5 @@
 package org.obs.seleniumcommands;
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
@@ -11,6 +12,7 @@ public class Base {
     public WebDriver driver;
     public void initializeTest(String browser) {
         if (browser.equals("Chrome")) {
+            WebDriverManager.chromedriver().setup();
             driver = new ChromeDriver();
         } else if (browser.equals("Firefox")) {
             driver = new FirefoxDriver();
@@ -27,6 +29,8 @@ public class Base {
     }
     @AfterMethod
     public void tearDown() {
-        driver.close();
+        //driver.close();//will kill current instance
+        //driver.quit();//will kill all open browser
     }
 }
+
