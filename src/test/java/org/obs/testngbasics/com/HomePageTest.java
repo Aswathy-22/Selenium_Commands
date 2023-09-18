@@ -5,7 +5,7 @@ import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 public class HomePageTest extends Base{
-    @Test(priority = 1,invocationCount = 2,groups = {"Sanity","Regression"})
+    @Test(priority = 1,groups = {"Sanity","Regression"})
     public void verifyHomePageTitle(){
         String actualTitle = driver.getTitle();
         String expectedTitle = "Demo Web Shop";
@@ -14,14 +14,15 @@ public class HomePageTest extends Base{
     @Test(priority = 4,groups = {"Sanity","Regression"},retryAnalyzer = RetryAnalyzer.class)
     public void verifySubscribeMessage(){
         WebElement messageField= driver.findElement(By.id("newsletter-email"));
-        messageField.click();
+        messageField.sendKeys("asw@gmail.com");
         WebElement subscribeButton= driver.findElement(By.id("newsletter-subscribe-button"));
         subscribeButton.click();
-        String actualMessage = driver.getTitle();
-        String expectedMessage = "Thank you for signing up! A verification email has been sent. We appreciate your interest.";
-        Assert.assertEquals(actualMessage, expectedMessage, "Email Subscription failed");
+        WebElement actualTextElement= driver.findElement(By.id("newsletter-result-block"));
+        String actualTextMessage = actualTextElement.getText();
+        String expectedTextMessage = "Thank you for signing up! A verification email has been sent. We appreciate your interest.";
+        Assert.assertEquals(actualTextMessage, expectedTextMessage, "Message Mismatch");
     }
-    @Test(priority = 3,enabled = true,groups = {"Smoke"})
+    @Test(priority = 3,invocationCount = 2,enabled = true,groups = {"Smoke"})
     public void verifyButton(){
         Assert.assertTrue(true);
     }

@@ -34,23 +34,23 @@ public class Excelutility {
         try {
             f = new FileInputStream(System.getProperty("user.dir") + Constants.EXCEL_PATH);
             wb = new XSSFWorkbook(f);
-        } catch (IOException e) {
+            sh = wb.getSheet(sheetName);
+            List<List<String>> excelRows = new ArrayList<>();
+            int rowCount = sh.getLastRowNum() - sh.getFirstRowNum();
+            for (int i = 0; i < rowCount + 1; i++) {
+                int x = 0;
+                Row row = sh.getRow(i);
+                String[] columnList = new String[row.getLastCellNum()];
+                for (int j = 0; j < columnList.length; j++) {
+                    columnList[j] = formatter.formatCellValue(row.getCell(x));
+                    x++;
+                }
+                excelRows.add(new ArrayList<>(Arrays.asList(columnList)));
+            }
+            return excelRows;
+        }catch (IOException e) {
             throw new IllegalArgumentException("defined file not found");
         }
-        sh = wb.getSheet(sheetName);
-        List<List<String>> excelRows = new ArrayList<>();
-        int rowCount = sh.getLastRowNum() - sh.getFirstRowNum();
-        for (int i = 0; i < rowCount + 1; i++) {
-            int x = 0;
-            Row row = sh.getRow(i);
-            String[] columnList = new String[row.getLastCellNum()];
-            for (int j = 0; j < columnList.length; j++) {
-                columnList[j] = formatter.formatCellValue(row.getCell(x));
-                x++;
-            }
-            excelRows.add(new ArrayList<>(Arrays.asList(columnList)));
-        }
-        return excelRows;
     }
     public Object[][] dataProviderRead(String sheetName) {
         DataFormatter formatter = new DataFormatter();//filename

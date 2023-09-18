@@ -1,17 +1,21 @@
 package org.obs.testngbasics.com;
 
+import org.obs.utility.Excelutility;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+import java.util.List;
 public class LoginPageTest extends Base{
+    Excelutility excel=new Excelutility();
     @Test
     public void verifyUserLogin() {
+        List<List<String>> data=excel.excelDataReader("LoginPage");
         WebElement login = driver.findElement(By.xpath("//a[text()='Log in']"));
         login.click();
-        String emailId = "aswathyarabind@gmail.com";
-        String password = "marryGold257%";
+        String emailId = data.get(0).get(1);
+        String password =data.get(1).get(1) ;
         WebElement emailfield = driver.findElement(By.id("Email"));
         emailfield.sendKeys(emailId);
         WebElement passwordfield = driver.findElement(By.name("Password"));
